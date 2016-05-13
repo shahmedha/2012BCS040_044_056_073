@@ -1,0 +1,16 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+            "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html lang="en">
+<head>
+<title>Siena C++ API Documentation</title>
+<meta http-equiv="Reply-to" content="carzanig@cs.colorado.edu">
+<meta http-equiv="Owner" content="Antonio Carzaniga">
+<meta name="Author" content="Antonio Carzaniga">
+<link href="antodoc.css" rel="stylesheet" type="text/css">
+<link rev=MADE href="mailto:carzanig@cs.colorado.edu">
+</head>
+<body>
+<div align=right><em><a
+href="http://www.cs.colorado.edu/~carzanig/siena/index.html">Siena</a></em>
+C++ API documentation (v. @VERSION@)</div>
+<hr>

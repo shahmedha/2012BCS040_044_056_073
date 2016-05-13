@@ -1,0 +1,275 @@
+<body>
+
+This is the documentation of the implementation of <a
+href="http://www.inf.usi.ch/carzaniga/siena/index.html">Siena</a> for
+the Java language.
+
+<hr>
+<b>Copyright &#169; 2000-2005  University of Colorado.</b>
+<br>
+<b>Copyright &#169; 2005-2008  Antonio Carzaniga.</b>
+<br>
+<em>Authors:
+<a
+    href="http://www.inf.usi.ch/carzaniga/">Antonio Carzaniga</a>,
+<a href="http://www.inf.usi.ch/phd/malekpour/">Amir Malekpour</a>.
+<br>
+Lats update on 01/06/2012 reflecting Siena DVDRP 2.0.1
+</em>
+<p>
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.1 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, no Front-Cover Texts and no Back-Cover Texts.  A
+copy of the license is included in the section entitled <a
+href="fdl.txt">"GNU Free Documentation License"</a>.
+<p>
+Please, send comments, suggestions, complaints about this
+documentation to <a
+href="http://www.inf.usi.ch/carzaniga/">Antonio Carzaniga</a>
+&lt;<a
+href="mailto:(firstname.lastname@usi.ch)">(firstname.lastname@usi.ch)</a>&gt;.
+<hr>
+
+<h2>Basics</h2>
+
+Siena is a publish/subscribe service. The abstract interface of Siena
+is embodied in the {@link siena.Siena} interface.  An application
+typically uses an implementation of the Siena interface to {@link
+siena.Siena#publish(siena.Notification) publish} {@link
+siena.Notification}s or to {@link siena.Siena#subscribe(siena.Filter,
+siena.Notifiable) subscribe} for some notifications of interest.
+<p>
+
+<h3>Notifications</h3> 
+
+An event notifications is a set of named attributes.  Each attribute
+has a type and a value (see {@link siena.AttributeValue}).  For
+example:
+<p>
+<table border=1><tr><td>
+<table border=0 cellpadding=3 cellspacing=3>
+<tr><td><em>string</em> <td>stock <td>"XYZ"
+<tr><td><em>int</em> <td>quantity <td>2500
+<tr><td><em>float</em> <td>price <td>3.1415
+</table>
+</table>
+<p>
+
+Attribute names must be unique in a notifications.
+
+<h3>Selection Mechanisms for Subscriptions</h3>
+
+Siena offers two kinds of selection mechanisms:
+
+<ul>
+<li><em>filters</em> select one event notification at a time.  Filters
+    are defined by the class {@link siena.Filter}.  A filter is a
+    conjunction (logical <em>and</em>) of constraints on specific
+    attributes of a notification (see {@link
+    siena.AttributeConstraint}).  For example:
+    <p>
+    <table border=1><tr><td>
+    <table border=0 cellpadding=3 cellspacing=3>
+    <tr><td><em>string</em><td>stock<td><td><b>=</b><td>"XYZ"
+    <tr><td><em>int</em><td>quantity<td><td><b>&gt;</b><td>2000
+    <tr><td><em>int</em><td>quantity<td><td><b>&lt;</b><td>3000
+    <tr><td><em>float</em><td>price<td><td><b>&gt;</b><td>2.7818
+    </table>
+    </table>
+    <p>
+
+    A filter can have more than one constraint for the same
+    attribute.
+
+<li><em>patterns</em> select one or more notifications at a time.
+    patterns are defined by the class {@link siena.Pattern}.
+    The current implementation supports the simple form of pattern
+    given by a sequence of filters. 
+</ul>
+
+<p>
+
+<h3>How Notifications are Delivered to Subscribers</h3>
+
+A subscriber must implement the {@link siena.Notifiable} interface.
+Siena delivers notifications to a subscriber by calling the
+<code>notify</code> method on the subscriber object.  Notifiable has
+two variants of the notify method: {@link
+siena.Notifiable#notify(siena.Notification) notify(Notification n)} is
+called to notify a single notification, while {@link
+siena.Notifiable#notify(siena.Notification[]) notify(Notification
+s[])} is called to notify a sequence of notifications.
+<p>
+
+A subscriber must provide both implementations, even if it will never
+receive sequences of notifications.  In this case, the subscriber can
+implement:
+<pre>
+    public void notify(Notification[] s) {};
+</pre>
+
+<h2>How to Set Up a Siena Service</h2>
+
+<h3>How to Access the Siena Service</h3>
+
+Objects can publish or subscribe by accessing an implementation of
+Siena.  The simplest way to access a Siena service is through a remote
+service interface object.  This is essentially a <em>proxy</em> object
+that sends every request to an external Siena server, and receives
+incoming notifications.  The implementation of the proxy is provided
+through the {@link siena.ThinClient} class.  A <code>ThinClient</code>
+object implements the <code>Siena</code> interface, but it does not
+provide a Siena service itself: it simply forwards every publication
+and every subscription to the remote server, and passes any incoming
+notification to its subscriber.
+
+<p>Clients use a <code>ThinClient</code> just like any other Siena
+interface.  A publisher creates a <code>ThinClient</code> object and
+publishes notifications to it.  A subscriber creates a
+<code>ThinClient</code> object and subscribes.
+
+<p>For example:
+
+<pre><code>
+    ThinClient mySiena = new ThinClient("ka:host.domain:1111");
+    Notifiable subscriber;
+    // ... subscriber = ...
+
+    Filter f = new Filter();
+    f.addConstraint("message", OP.ANY, null);
+    mySiena.subscribe(f, subscriber);
+
+    // ...
+    Notification n = new Notification();
+    n.putAttribute("message","Hello, World!");
+    mySiena.publish(n);
+    // ...
+</code></pre>
+
+
+<h3>How to Set Up a Network of Siena Servers</h3>
+
+You can run a stand-alone Siena server with {@link siena.StartDVDRPServer}.
+For example:
+<p>
+<pre>
+    java siena.StartDVDRPServer -id server1 -receiver ka:myhost.mydomain:1111
+</pre>
+starts up a Siena server on the local host, giving this server the
+identifier "server1".  This server is also given a packet receiver
+based on persistent TCP connections ("ka" type) on port 1111, and this
+receiver is also given the host name "myhost.mydomain", so that it
+would, if necessary, advertise that host name to other servers.
+
+<p>
+Once a server is up and running, you can control the configuration of
+that server using the {@link siena.DVDRPControl} utility, and in
+particular you can establish a connection between two servers.
+Suppose that, in addition to the server started above, you also start
+another server on some other machine otherhost.mydomain:
+
+<p>
+<pre>
+    java siena.StartDVDRPServer -id server2 -receiver ka:otherhost.mydomain:2222
+</pre>
+
+and yet another server 
+
+<p>
+<pre>
+    java siena.StartDVDRPServer -id server3 -receiver ka:thirdhost.mydomain:3333
+</pre>
+
+<p>
+Now, you can tell the first server to connect to the other two:
+
+<p>
+<pre>
+    java siena.DVDRPControl ka:myhost.mydomain:1111 connect server2 ka:otherhost.mydomain:2222
+    java siena.DVDRPControl ka:myhost.mydomain:1111 connect server3 ka:thirdhost.mydomain:3333
+</pre>
+
+which forms a triangle-shaped network of Siena DVDRP servers.
+As the example shows, the broker topology need not be a tree.
+When a cyclic topology like above is formed, brokers route messages on trees
+in order to avoid cycles. By default the cost of each inter-broker link is one. You
+can specify the cost of a link by passing a last argument to
+siena.DVDRPControl. In this case brokers route messages on the shortest
+path they compute given the cost of each link. As an example the following link has a cost of 10:
+
+<pre>
+    java siena.DVDRPControl ka:myhost.mydomain:1111 connect server2 ka:otherhost.mydomain:2222 <b>10</b>
+</pre>
+
+<p>
+To disconnect an already established inter-broker link, use the command
+<b>disconnect</b>. For example, to remove the above link issue the following:
+</p>
+<pre>
+    java siena.DVDRPControl ka:myhost.mydomain:1111 disconnect server2
+</pre>
+
+<p>
+To create large topologies you can specify a configuration file to the control
+tool, with one command per line. Lines starting with '#' will be ignored.
+</p>
+
+<pre>
+    java siena.DVDRPControl -f &lt;configuration-file&gt;
+</pre>
+
+<h3>Receivers and Transport Protocols</h3>
+<p>
+The communication of brokers with other brokers and clients can be over TCP or
+UDP. This is specified as a command line option as you saw before, when
+starting a Siena broker:
+</p>
+
+<pre>
+    java siena.StartDVDRPServer -id server2 -receiver ka:otherhost.mydomain:2222
+</pre>
+<p>
+This specifier tells the broker how to receive incoming requests.
+The format of receiver specifier is as follows :
+</p>
+
+<pre>
+    transport_type:host_address:listening_port:[receiver_threads_num]
+</pre>
+
+<p>
+Where the last part (<i><b>receiver_threads_num</b></i>) determines the number of threads 
+to be used to maintain persistent TCP connection (with <b><i>ka</i></b> transport explained
+below). This part of specifier is optional and has a default value of 5.
+<br>
+<b><i>transport_type</i></b> must be one of the following:
+</p>
+
+<p>
+<b><i>tcp:</i></b> On demand TCP connection. With this option a TCP connection
+is made to send each message and is terminated once sending is complete. Note
+that if you have very high message send/receive rates this type of connection 
+is very likely to cause message loss since closing and initiating connections 
+takes a relatively long time. You can detect this problem, for instance by 
+seeing a client throwing an instance of siena.comm.PacketSenderException 
+upon publishing a message.
+</p>
+
+<p>
+<b><i>ka:</i></b> Persistent TCP connection (keep-alive). With this option a
+TCP connection begins the first time a message is to be sent and is maintained until explicitly terminated.
+ This connection type is best appropriate for inter-broker links or for high rate publishers/subscribers. 
+ </p>
+<!-- Is this true ?
+Notice that with this option, the number of receiver threads
+(<i><b>receiver_threads_num</b></i>) should not be less that the number of
+concurrent connections to the broker otherwise message losses will be 
+occur.-->
+
+<p>
+<b><i>udp:</i></b> UDP connection. With this type of connection messages incur
+smaller delivery delays. It is suitable in cases where a broker
+serves many clients (e.g., more than 1 thousand concurrent clients).
+</p>
+</body>

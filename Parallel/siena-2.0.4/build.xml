@@ -1,0 +1,89 @@
+<!--
+Siena Ant build configuration
+Amir Malekpour <malekpoa@usi.ch>
+University of Lugano 2008-2012
+-->
+<project name="Siena" default="buildJar" basedir=".">
+
+    <!-- Global properties -->
+    <property name="VersionNumber" value="2.0.4"/> 
+
+    <!-- Targets -->
+
+    <target name="all" depends="prepare,buildJarWithTests,buildJar">
+        <property name="outputDir" value="bin" />
+    </target>
+
+    <target name="clean">
+        <delete dir="bin" />
+        <delete file="siena-${VersionNumber}.jar"/>
+    </target>
+
+    <target name="prepare" >
+        <mkdir dir="bin" />
+    </target>
+
+    <target name="compileSiena" depends="prepare">
+        <javac srcdir="src/siena" destdir="bin" optimize="on" />
+    </target>
+
+    <target name="compileTests" depends="prepare,compileSiena" >
+        <javac srcdir="test/siena" destdir="bin" classpath="bin:lib/${JUnitFilename}:${JUnitFilename}" optimize="on"/>
+        <javac srcdir="test/sienatest" destdir="bin" classpath="bin:lib/${JUnitFilename}:${JUnitFilename}" optimize="on"/>
+    </target>
+
+    <!-- If -DJUnitFilename=foo-junit.jar is defined -->
+    <target name="buildJarWithTests" depends="compileSiena,compileTests" if="JUnitFilename">
+        <jar destfile="siena-${VersionNumber}.jar" basedir="bin" excludes="*.svn*" >
+            <manifest>
+                <attribute name="Main-Class" value="siena.StartServer"/>
+            </manifest>
+        </jar>
+        <echo message="siena-${VersionNumber}.jar file was created successfully (tests included)."/>
+    </target>
+
+    <!-- If -DJUnitFilename=foo-junit.jar is not defined -->
+    <target name="buildJar" depends="compileSiena" unless="JUnitFilename">
+        <jar destfile="siena-${VersionNumber}.jar" basedir="bin" excludes="*.svn*" >
+            <manifest>
+                <attribute name="Main-Class" value="siena.StartServer"/>
+            </manifest>
+        </jar>
+        <echo message="siena-${VersionNumber}.jar file was created successfully." />
+    </target>
+
+    <target name="test">
+        <exec executable="./test_tokenizer.sh" dir="test">
+	  <env key="CLASSPATH" value="../siena-${VersionNumber}.jar:."/>
+	  <env key="JAVA" value="java"/>
+	  <env key="srcdir" value="."/>
+	</exec>
+        <exec executable="./test_filter.sh" dir="test">
+	  <env key="CLASSPATH" value="../siena-${VersionNumber}.jar:."/>
+	  <env key="JAVA" value="java"/>
+	  <env key="srcdir" value="."/>
+	</exec>
+        <exec executable="./test_covering.sh" dir="test">
+	  <env key="CLASSPATH" value="../siena-${VersionNumber}.jar:."/>
+	  <env key="JAVA" value="java"/>
+	  <env key="srcdir" value="."/>
+	</exec>
+        <exec executable="./test_encode.sh" dir="test">
+	  <env key="CLASSPATH" value="../siena-${VersionNumber}.jar:."/>
+	  <env key="JAVA" value="java"/>
+	  <env key="srcdir" value="."/>
+	</exec>
+        <echo message="Please wait..." />
+        <exec executable="./test_thinclient.sh" dir="test">
+	  <env key="CLASSPATH" value="../siena-${VersionNumber}.jar:."/>
+	  <env key="JAVA" value="java"/>
+	  <env key="srcdir" value="."/>
+	</exec>
+        <echo message="Please wait..." />
+        <exec executable="./test_topology.sh" dir="test">
+	  <env key="CLASSPATH" value="../siena-${VersionNumber}.jar:."/>
+	  <env key="JAVA" value="java"/>
+	  <env key="srcdir" value="."/>
+	</exec>
+    </target>
+</project>

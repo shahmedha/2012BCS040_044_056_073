@@ -1,0 +1,88 @@
+body { 
+	background-color: #f0f0e0;
+	font-family: Helvetica, Arial, sans-serif; 
+}
+
+.TableHeadingColor     { background: #ccccaa }
+.TableSubHeadingColor  { background: #eeeecc }
+.TableRowColor         { background: #fffff0 }
+
+/* Font used in left-hand frame lists */
+.FrameTitleFont   { font-size: normal; font-family: normal }
+.FrameHeadingFont { font-size: normal; font-family: normal }
+.FrameItemFont    { font-size: normal; font-family: normal }
+
+/* Navigation bar fonts and colors */
+.NavBarCell1    { 
+	font-family: Helvetica, Arial, sans-serif; 
+	background-color:#e0e0d0;
+}
+.NavBarCell1 A:link { 
+	color: Black; 
+	text-decoration: none;
+} 
+.NavBarCell1 A:visited { 
+	color: Black;
+	text-decoration: none;
+}
+.NavBarCell1 A:hover {
+	color: Black;
+	text-decoration: underline;
+}
+
+.NavBarCell1Rev { background-color:#ccccaa;}
+.NavBarFont1    { font-family: Helvetica, Arial, sans-serif; color:#000000;}
+.NavBarFont1Rev { font-family: Helvetica, Arial, sans-serif; color:#000000;}
+
+.NavBarCell2    { 
+	font-family: Helvetica, Arial, sans-serif; 
+	background-color:#e0e0d0;
+}
+
+.NavBarCell2 A:link { 
+	color: Black; 
+	text-decoration: none;
+} 
+
+.NavBarCell2 A:visited { 
+	color: Black;
+	text-decoration: none;
+}
+
+.NavBarCell2 A:hover {
+	color: Black;
+	text-decoration: underline;
+}
+
+.NavBarCell3    { 
+	font-family: Helvetica, Arial, sans-serif; 
+	background-color:#e0e0d0;
+}
+
+.NavBarCell3 A:link { 
+	color: Black; 
+	text-decoration: none;
+} 
+
+.NavBarCell3 A:visited { 
+	color: Black;
+	text-decoration: none;
+}
+
+.NavBarCell3 A:hover {
+	color: Black;
+	text-decoration: underline;
+}
+
+A:link { 
+	color: #603000;
+	text-decoration: none;
+} 
+A:visited { 
+	color: #603010; 
+	text-decoration: none;
+}
+A:hover {
+	color: #603000;
+	text-decoration: underline;
+}

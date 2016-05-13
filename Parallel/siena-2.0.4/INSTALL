@@ -1,0 +1,74 @@
+INSTALLATION:
+
+This version of Siena comes with a minimalistic build system based on
+the typical configure-and-make process.  This type of build process
+may not be ideal for a Java project, and of course some developers may
+prefer a different build process, perhaps performed within an
+integrated development environment.  However, this document describes
+this somewhat more primitive process, whith is the process followed by
+the main maintainer of Siena.
+
+* Building Siena From a Clean Source Repository (e.g., cloned by git):
+
+  If you are building and installing Siena from a source repository,
+  then you must first bootstrap the build environment.  To do that,
+  you need to have GNU Autoconf installed.  Then, assuming you have a
+  clean source repository in $HOME/src/siena:
+
+  0. > cd $HOME/src/siena
+     > autoconf
+
+  Then proceed with the build instruction from step 1 below:
+
+* Building Siena From a Source Package
+
+  These instructions assume that you have unpacked (or checked out)
+  the Siena sources in $HOME/src/siena.  Then, in order to build
+  Siena, do the following:
+
+  1. create a build directory:
+
+     > mkdir $HOME/build/siena
+
+  2. configure the build environemnt:
+
+     > cd $HOME/build/siena
+     > $HOME/siena-2.0.0/configure
+
+     you may have to tell the configure script where your Java
+     binaries are installed (e.g., the javac compiler).  Also, if you
+     intend to run the JUnit tests that come with Siena, you must have
+     the JUnit library installed somewhere on your system.  In this
+     example, we assume it is in $HOME/lib/java/junit-4.10.jar. (Basic jar,
+     with hamcrest)
+
+     > cd $HOME/build_siena
+     > $HOME/src/siena/configure \
+       		--with-javabin=/usr/lib/jvm/default-java/bin \
+		--with-classpath=$HOME/lib/java/junit-4.10.jar
+
+  3. build the Siena API and server:
+
+     > cd $HOME/build/siena
+     > make
+
+  4. test the system:
+
+     > cd $HOME/build/siena
+     > make test
+
+  5. create the user documentation in $HOME/build/siena/doc/html:
+
+     > cd $HOME/build/siena
+     > make doc
+
+     and consult the documentation starting from 
+     $HOME/build/siena/doc/html/index.html
+
+  6. manually install Siena and its documentation.  Here we assume
+     that the Siena library will go in $HOME/lib/java and that the
+     documentation will go into $HOME/doc/siena
+
+     > cd $HOME/build/siena
+     > mv -i siena-2.0.0.jar $HOME/lib
+     > mv -i doc/html $HOME/doc/siena

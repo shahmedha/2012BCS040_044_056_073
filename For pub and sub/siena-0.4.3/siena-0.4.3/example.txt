@@ -1,0 +1,13 @@
+Harry_Potter 1 J.K.Rowlling 300 10 9.5 Fiction 1 Cash 2000
+Shiva_trilogy 2 Amish 400 15 8.5 Fiction 2 Credit 2009
+Let_us_c 3 Kanetkar 350 5 8 Educational 3 Netbanking 1998
+Harry_Potter 1 J.K.Rowlling 300 10 9.5 Fiction 1 Cash 2000
+Shiva_trilogy 2 Amish 400 15 8.5 Fiction 2 Credit 2009
+Let_us_c 3 Kanetkar 350 5 8 Educational 3 Netbanking 1998
+Harry_Potter 1 J.K.Rowlling 300 10 9.5 Fiction 1 Cash 2000
+Shiva_trilogy 2 Amish 400 15 8.5  Fiction 2 Credit 2009
+Let_us_c 3 Kanetkar 350 5 8 Educational 3 Netbanking 1998
+Harry_Potter 1 J.K.Rowlling 300 10 9.5 Fiction 1 Cash 2000
+Shiva_trilogy 2 Amish 400 15 8.5 Fiction 2 Credit 2009
+Let_us_c 3 Kanetkar 350 5 8 Educational 3 Netbanking 1998
+

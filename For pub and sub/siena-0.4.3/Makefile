@@ -1,0 +1,97 @@
+#
+#  This file is part of Siena, a wide-area event notification system.
+#  See http://www.cs.colorado.edu/serl/siena/
+#
+#  Author: Antonio Carzaniga <carzanig@cs.colorado.edu>
+#  See the file AUTHORS for full details. 
+#
+#  Copyright (C) 1998-2001 University of Colorado
+#
+#  This program is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License
+#  as published by the Free Software Foundation; either version 2
+#  of the License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,
+#  USA, or send email to serl@cs.colorado.edu.
+#
+#
+# $Id: Makefile-win32.in,v 1.1 2003/07/09 20:15:55 carzanig Exp $
+#
+
+#
+# this Makefile is meant to work on Microsoft's NMAKE... 
+# ...no comments.
+#
+srcdir=.
+
+SYSTEM		= siena
+VERSION		= 0.4.3
+
+DEFS		= 
+INCS		= -I$(srcdir) -I$(srcdir)/include
+CXX		= cl.exe
+ZIP		= zip
+
+OPTDEBUGFLAGS	= -O2
+CFLAGS		= -nologo -ML -W3 -GX $(OPTDEBUGFLAGS) $(DEFS) $(INCS) -FD
+LINK		= link.exe
+LIBS		= wsock32.lib 
+LFLAGS		= -nologo
+OBJS		= Comm.obj SENP.obj Siena.obj SienaId.obj ThinClient.obj 
+
+TARGETDIR	= $(SYSTEM)
+PACKAGE 	= $(SYSTEM)-$(VERSION)-win32
+
+all : siena.lib publisher.exe subscriber.exe
+
+siena.lib : $(OBJS)
+	$(LINK) -lib $(LFLAGS) $(OBJS) -out:$@
+
+.SUFFIXES: .cc .obj
+
+{$(srcdir)}.cc.obj:
+	$(CXX) $(CFLAGS) -TP -c $<
+
+publisher.exe : publisher.obj siena.lib
+	$(LINK) $(LFLAGS) -DEBUG publisher.obj siena.lib $(LIBS) -out:$@
+
+subscriber.exe : subscriber.obj siena.lib
+	$(LINK) $(LFLAGS) -DEBUG subscriber.obj siena.lib $(LIBS) -out:$@
+
+#
+# installation and packaging
+#
+install : ALL
+	-rmdir /s /q $(TARGETDIR)
+	mkdir $(TARGETDIR)\lib
+	mkdir $(TARGETDIR)\docs
+	copy $(srcdir)\README $(TARGETDIR)
+	copy $(srcdir)\README.win32 $(TARGETDIR)
+	copy $(srcdir)\AUTHORS $(TARGETDIR)
+	copy $(srcdir)\LICENSE $(TARGETDIR)
+	copy $(srcdir)\VERSION $(TARGETDIR)
+	xcopy $(srcdir)\include $(TARGETDIR)\include /S /I
+	xcopy $(srcdir)\docs $(TARGETDIR)\docs /S /I
+	copy siena.lib $(TARGETDIR)\lib
+
+package : install
+	$(ZIP) -r $(PACKAGE).zip $(TARGETDIR)
+
+clean :
+	-erase Comm.obj
+	-erase SENP.obj
+	-erase Siena.obj
+	-erase SienaId.obj
+	-erase ThinClient.obj
+	-erase siena.lib
+	-erase publisher.exe
+	-erase subscriber.exe
+	-erase $(PACKAGE).zip

@@ -1,0 +1,65 @@
+This package contains Siena, a wide-area event notification system.
+In particular, this is Siena-2, a package containing the Java API and
+a Java router that implements the B-DRP routing scheme[1] as well as
+the SFF matching and forwarding algorithm[2].
+
+ [1] A. Carzaniga, C.P. Hall, G. Toffetti Carughi, and A.L. Wolf
+"Practical High-Throughput Content-Based Routing Using Unicast State
+and Probabilistic Encodings". Technical Report 2009-06, Faculty of
+Informatics, University of Lugano, August 2009.  
+
+ [2] A. Carzaniga and A.L. Wolf 
+"Forwarding in a Content-Based Network". Proceedings of ACM SIGCOMM
+2003. p. 163-174. Karlsruhe, Germany. August, 2003.
+
+(papers available on-line at: http://www.inf.usi.ch/carzaniga/papers/)
+
+See also:
+http://www.inf.usi.ch/carzaniga/siena/software/
+http://www.inf.usi.ch/carzaniga/siena/forwarding/
+
+Copyright (C) 2005-2011 Antonio Carzaniga
+Copyright (C) 1998-2005 University of Colorado
+
+Authors: Antonio Carzaniga 
+         Cyrus Hall
+         Amir Malekpour
+	 Giovanni Toffetti Carughi
+	 (see AUTHORS for details)
+
+Siena is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Siena is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Siena.  If not, see <http://www.gnu.org/licenses/>.
+
+CONTACT:
+
+Please, direct questions and comments to Antonio Carzaniga
+(firstname.lastname@usi.ch).
+
+DOCUMENTATION:
+
+The API documentation is automatically generated in doc/index.html.
+See below for some basic usage documentation.
+
+This version of Siena comes with a minimalistic build system based on
+the typical configure-and-make process.  This type of build process
+may not be ideal for a Java project, and of course some developers may
+prefer a different build process, perhaps performed within an
+integrated development environment.  However, this document describes
+this somewhat more primitive process, whith is the process followed by
+the main maintainer of Siena.
+
+INSTALLATION:
+
+Two separate build methods are provided. One with GNU Autotools
+and the other with Apache Ant. See the INSTALL and INSTALL.ant 
+files for details on how to use each one to build Siena.

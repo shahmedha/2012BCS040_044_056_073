@@ -1,0 +1,90 @@
+<body>
+Communication mechanisms used by Siena.
+
+<h3>Basic Communication in Siena</h3>
+
+<p>The basis for communication between Siena components is a generic,
+uni-directional, point-to-point, packet-based communication service.
+In essence, this mechanism is an abstraction of a
+<em>datagram link</em> between two components.  A link is defined by
+the {@link siena.comm.PacketSender PacketSender} and {@link
+siena.comm.PacketReceiver PacketReceiver} interfaces, representing the
+sender's and receiver's ends respectively.
+
+<p>As a first step in establishing a communication link, a receiver
+creates a {@link siena.comm.PacketReceiver PacketReceiver} object.
+Once a <code>PacketReceiver</code> is active, a sender can create a
+corresponding {@link siena.comm.PacketSender PacketSender} object to
+send packets to the receiver.  <code>PacketSender</code> objects are
+created idirectly through {@link siena.comm.PacketSenderFactory
+PacketSenderFactory}, using the receiver's {@link
+siena.comm.PacketReceiver#address() external address}.  
+
+<p>An <em>external address</em> of a <code>PacketReceiver</code> is a
+byte string that serves as a universal locator for that receiver.  The
+space of external addresses is obviously shared by all link types and
+implementations.  Therefore, in order to partition the address space,
+an external address must comply with the following syntax:
+
+<p>
+<em>address</em> ::=
+<em>schema</em><code>:</code><em>schema-dependent-part</em>
+<p>
+
+Where <em>schema</em> is a short string, not containing the
+<code>":"</code> (colon) charachter, that uniquely identifies the type
+of receiver, and <em>schema-dependent-part</em> is another string
+whose format is specific to that type of receiver.
+
+<p>The current implementation of Siena provides three sender/receiver
+implementation pairs:
+
+<ul>
+<li><code>KAPacketSender</code>/{@link siena.comm.KAPacketReceiver
+KAPacketReceiver}: schema identifier <code>"ka"</code>.  Sends
+packets through TCP connections.  This sender/receiver pair attempts
+to maintain and reuse persistent TCP connections ("KA" stands for
+<em>keep alive</em>).
+
+<li><code>TCPPacketSender</code>/{@link siena.comm.TCPPacketReceiver
+TCPPacketReceiver}: schema identifier <code>"tcp"</code>. sends
+packets through TCP connections.  This sender/receiver pair uses one
+connection per packet.
+
+<li><code>UDPPacketSender</code>/{@link siena.comm.UDPPacketReceiver
+UDPPacketReceiver}: schema identifier <code>"udp"</code>. Sends
+packets using UDP datagrams.
+
+<li><code>SSLPacketSender</code>/{@link siena.comm.SSLPacketReceiver
+SSLPacketReceiver}: schema identifier <code>"ssl"</code>.  Sends
+packets through persistent ssl connections.  This sender/receiver pair
+attempts to maintain and reuse SSL connections.
+
+</ul>
+
+<h3>Extending the Communication Capabilities of Siena</h3>
+
+Siena can be easily extended with new packet sender/receiver
+implementation pairs.  For example, a developer may want to implement
+a communication mechanism that uses, say, an infra-red port. In order
+to do that, the developer must:
+
+<ol>
+<li>choose a globally unique schema identifier, for example <code>"ir"</code>.
+
+<li>provide a pair of specific implementations of {@link
+    siena.comm.PacketReceiver} and {@link siena.comm.PacketSender}
+    that make use of the infra-red port.  For example, these could be
+    called
+    <code>org.xyz.IRPacketReceiver</code> and
+    <code>org.xyz.IRPacketSender</code>.
+
+<li>provide a specific sender factory, say
+    <code>org.xyz.IRSenderFactory</code>, to be used directly by
+    applications, or indirectly through the {@link
+    siena.comm.GenericSenderFactory#registerFactory(String,PacketSenderFactory)
+    factory registration} feature of {@link
+    siena.comm.GenericSenderFactory}.
+</ol>
+
+</body>

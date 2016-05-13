@@ -1,0 +1,28 @@
+INSTALLATION using ant build system:
+
+As an alternative to the Autoconf build method you can use the ant build
+system and the provided build file (build.xml) to build Siena. You need to have
+ant already installed on your system; then follow the instructions below.
+
+1. To build the Siena jar file simply type:
+    
+    > ant
+
+    This will create a /bin directory to .class files and a .jar file in the project's 
+    root directory.
+
+2. To clear the temprary /bin directory and .jar file use
+    
+    > ant clean
+
+3. If you intend to run the JUnit tests that come with Siena, you must have the
+    JUnit library (Basic jar, with hamcrest). First build the jar 
+    file with tests included. To point ant to the location of the 
+    JUnit jar file use -DJUnitFilename directive.
+    
+    > ant buildJarWithTests -DJUnitFilename=/home/lib/junit-4.10.jar
+    
+    Then run tests:
+
+    > ant test
+

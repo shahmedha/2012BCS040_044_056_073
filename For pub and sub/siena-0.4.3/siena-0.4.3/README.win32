@@ -1,0 +1,49 @@
+USING THE WIN32 BINARY PACKAGE:
+
+These are minimal instructions on how to compile VC++ applications
+that use the Siena API.  These instructions assume that you unpacked
+the binary distribution in <topdir>, and therefore you have a
+<topdir>\siena directory containing subdirectories docs, lib, and
+include, as well as this and a few other documentation files.
+
+To compile, add -I<topdir>/siena/include to your compile command.
+
+To link, add <topdir>/lib/siena.lib wsock32.lib to your link command
+
+COMPILING AND INSTALLING THE SIENA API:
+
+This is how you compile and install the Siena API.  If you are using
+the win32-specific source package, you can skip to item 2.
+
+
+  1. If you are using the general source package, then rename (or
+     copy):
+
+     Makefil-win32 to Makefile
+     and 
+     sienaconf-win32.h to sienaconf.h
+
+  2. use Microsoft nmake to compile.  
+
+     cd <srcdir>
+     nmake
+
+     You can also compile in a seprate directory, which is what I
+     normally do.  Just do:
+
+     cd <builddir>
+     nmake -f <srcdir>\Makefile srcdir=<srcdir>
+
+  3. use nmake to install and/or to create a binary package:
+
+     cd <builddir>
+     nmake install -f <srcdir>\Makefile srcdir=<srcdir> TARGETDIR=<installdir>
+     
+     or
+ 
+     nmake package -f <srcdir>\Makefile srcdir=<srcdir> TARGETDIR=<installdir>
+
+Please, send bug report, suggestions and comments to me
+<carzanig@cs.colorado.edu>
+
+-Antonio
